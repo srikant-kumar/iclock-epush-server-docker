@@ -37,6 +37,26 @@ This is ideal for institutions, schools, offices, and factories that want to run
 
 ## 🚀 Quick Start
 
+### ⚙️ Database Configuration
+
+1. **Create the Database**
+   Create a database named `epushserver` and import the `iclock.sql` file into it.
+
+2. **Update MySQL Credentials**
+   Before building the Docker image, update your MySQL credentials in:
+
+   ```
+   iclock/WEB-INF/databaseconfig.properties
+   ```
+
+   Set values like:
+
+   - `DB hostname`: `DB_URL_MYSQL`
+   - `Username`: `DB_USERNAME_MYSQL`
+   - `Password`: `DB_PASSWORD_MYSQL`
+
+---
+
 ### 📦 Step 1: Build Docker Image
 
 Clone the repo and build the image:
@@ -54,22 +74,6 @@ Run the container and expose it on port `8080`:
 ```bash
 docker run -d -p 8080:8080 --name iclock datasecuretechnology/iclock-server
 ```
-
----
-
-### ⚙️ Database Configuration
-
-Before building the image, update your MySQL credentials in:
-
-```
-iclock/WEB-INF/databaseconfig.properties
-```
-
-Set values like:
-
-- `DB hostname`: `DB_URL_MYSQL`
-- `Username`: `DB_USERNAME_MYSQL`
-- `Password`: `DB_PASSWORD_MYSQL`
 
 ---
 
