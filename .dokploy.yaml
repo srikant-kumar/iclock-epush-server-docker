@@ -1,0 +1,50 @@
+version: "1.0"
+
+services:
+  web:
+    build:
+      context: .
+    container_name: tomcat-iclock
+    ports:
+      - 8080
+    volumes:
+      - ./iclock:/usr/local/tomcat/webapps/iclock
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5
+    platform: linux/amd64
+    container_name: mysql-epush
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: epushserver
+      MYSQL_USER: epush1
+      MYSQL_PASSWORD: epush1
+    ports:
+      - 3308:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d
+      - ./mysql/my.cnf:/etc/my.cnf
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    platform: linux/amd64
+    container_name: iclock-phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - 8081
+    depends_on:
+      - db
+
+volumes:
+  mysql-data:
+
+expose:
+  - port: 8080
+    domain: yourdomain.com
+  - port: 8081
+    domain: phpadmin.yourdomain.com
