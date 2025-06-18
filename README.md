@@ -1,6 +1,6 @@
 # 🧠 iClock ePush Biometric Server – Dockerized | eSSL & ZKTeco Integration
 
-> **A one-command Docker setup to run the iClock biometric server (ePush-compatible) for eSSL and ZKTeco devices – with automatic database import. Works seamlessly on Linux, Windows, and Apple Silicon (M1/M2) using Docker.**
+> **A one-command Docker setup to run the iClock biometric server (ePush-compatible) for eSSL and ZKTeco devices – with automatic database import and phpMyAdmin support. Works seamlessly on Linux, Windows, and Apple Silicon (M1/M2) using Docker.**
 
 ---
 
@@ -74,7 +74,7 @@ project-root/
 Run this command once:
 
 ```bash
-docker-compose up --build
+docker-compose up --d
 ```
 
 That's it! It will:
@@ -82,20 +82,33 @@ That's it! It will:
 - 🔧 Build the Tomcat + iClock app image
 - 🐬 Start a MySQL 5 container with `epushserver` DB
 - 🛠️ Automatically import `iclock.sql`
-- 🔄 Link MySQL and Tomcat automatically
-- 🌐 Expose the app on `http://localhost:8080/iclock`
+- 🧠 Start phpMyAdmin to manage the database
+- 🔄 Link MySQL, Tomcat, and phpMyAdmin automatically
+- 🌐 Expose the app on:
+
+  - `http://localhost:8080/iclock` (iClock Web)
+  - `http://localhost:8081` (phpMyAdmin)
 
 ---
 
-### 🧪 Access the Web Portal
+### 🧪 Access the Web Interfaces
 
-Once the app is running, open your browser:
+- 📊 iClock Web App:
 
-```
-http://localhost:8080/iclock
-```
+  ```
+  http://localhost:8080/iclock
+  ```
 
-> Replace `localhost` with your server IP if deployed remotely.
+- 🛠️ phpMyAdmin (MySQL DB Admin):
+
+  ```
+  http://localhost:8081
+  ```
+
+> Login credentials for phpMyAdmin:
+>
+> - **Username:** `root`
+> - **Password:** `admin`
 
 ---
 
@@ -103,12 +116,13 @@ http://localhost:8080/iclock
 
 ### 🔧 `docker-compose.yml`
 
-- Two containers:
+- Three containers:
 
-  - `db`: MySQL 5 with preloaded SQL
+  - `db`: MySQL 5 with preloaded SQL and persistent volume
   - `web`: Tomcat 8 with Java 8 and your iClock app
+  - `phpmyadmin`: Web interface for managing MySQL (port `8081`)
 
-- Platform fix for M1/M2:
+- Platform fix for Apple Silicon:
 
   ```yaml
   platform: linux/amd64
@@ -124,10 +138,11 @@ Run this command to stop and clean up the containers:
 docker-compose down
 ```
 
-This will:
+To delete volumes as well (e.g. reset DB data):
 
-- 🛑 Stop all running services
-- 🧼 Remove containers, networks, and volumes defined in the `docker-compose.yml`
+```bash
+docker-compose down -v
+```
 
 ---
 
@@ -136,7 +151,8 @@ This will:
 - App is deployed at `/iclock` context path
 - DB is automatically initialized on first run using `db/iclock.sql`
 - MySQL config is in `mysql/my.cnf` (utf8mb4-safe, strict SQL mode)
-- You can re-import data by deleting the volume or rebuilding containers
+- Database data is persisted in a Docker named volume
+- phpMyAdmin is included for easier DB management
 
 ---
 
@@ -149,6 +165,7 @@ This will:
 - Biometric attendance system server
 - Docker-based real-time biometric sync
 - ZKTeco push server with MySQL
+- phpMyAdmin with Docker
 - ePush server on Ubuntu, Debian, macOS (M1/M2)
 
 ---
