@@ -19,7 +19,7 @@ services:
     build: .
     container_name: tomcat-iclock
     ports:
-      - "8080:8080"
+      - "8082:8080"
     volumes:
       - ./iclock:/usr/local/tomcat/webapps/iclock
     depends_on:
